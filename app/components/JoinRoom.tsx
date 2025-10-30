@@ -1,17 +1,13 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { User } from "../interfaces/user";
 import { generateId } from "../utils";
 
-interface User {
-  id: string;
-  name: string;
-}
-
 export default function JoinRoom({ onBack }: { onBack: () => void }) {
-  const [roomId, setRoomId] = useState("");
-  const [name, setName] = useState("");
+  const [roomId, setRoomId] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+
   const [myMatch, setMyMatch] = useState<User | null>(null);
-  const clientIdRef = useRef(generateId("p_"));
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -21,26 +17,36 @@ export default function JoinRoom({ onBack }: { onBack: () => void }) {
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data);
       if (data.type === "joined") {
-        // ignore
+        console.log("Você entrou na sala");
       }
       if (data.type === "your_match") {
         setMyMatch(data.match);
       }
       if (data.type === "participant_added") {
-        // ignore
+        console.log("alguem entrou na sala", { data });
       }
       if (data.type === "error") alert("Erro: " + data.message);
     };
     return () => ws.close();
-  }, []);
+  }, [user?.id]);
 
-  function join() {
+  function join(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    const name = formData.get("name")?.toString().trim() || undefined;
+    const roomId = formData.get("roomId")?.toString().trim() || "";
+
     const payload = {
       type: "join_room",
       roomId,
-      clientId: clientIdRef.current,
-      name: name || "Participante",
+      clientId: generateId("p_"),
+      name: name,
     };
+
+    setUser({ id: payload.clientId, name: name || "Guest" });
+    setRoomId(roomId);
     wsRef.current?.send(JSON.stringify(payload));
   }
 
@@ -50,23 +56,19 @@ export default function JoinRoom({ onBack }: { onBack: () => void }) {
         ← voltar
       </button>
       <div className="p-4 bg-white rounded shadow mt-2">
-        <label className="block text-sm mb-1">Room ID</label>
-        <input
-          className="input"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value)}
-        />
-        <label className="block text-sm mt-2 mb-1">Seu nome</label>
-        <input
-          className="input"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <div className="mt-3">
-          <button onClick={join} className="btn">
-            Entrar
-          </button>
-        </div>
+        <form onSubmit={join}>
+          <label className="block text-sm mb-1">Room ID</label>
+          <input className="input" name="roomId" disabled={!!roomId} />
+          <label className="block text-sm mt-2 mb-1">Seu nome</label>
+          <input className="input" name="name" disabled={!!roomId} />
+          <div className="mt-3">
+            <button type="submit" className="btn" disabled={!!roomId}>
+              Entrar
+            </button>
+          </div>
+        </form>
+
+        {roomId && user && <p className="mt-4">Entrou na sala {roomId}</p>}
 
         {myMatch && (
           <div className="mt-4 p-3 bg-zinc-50 rounded">
