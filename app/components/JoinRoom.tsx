@@ -1,34 +1,13 @@
 "use client";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
+import { useWebSocket } from "../contexts/WebsocketContext";
 import { User } from "../interfaces/user";
 import { generateId } from "../utils";
 
 export default function JoinRoom({ onBack }: { onBack: () => void }) {
+  const { myMatch, addParticipantInRoom } = useWebSocket();
   const [roomId, setRoomId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-
-  const [myMatch, setMyMatch] = useState<User | null>(null);
-  const wsRef = useRef<WebSocket | null>(null);
-
-  useEffect(() => {
-    const url = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3000";
-    const ws = new WebSocket(url);
-    wsRef.current = ws;
-    ws.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (data.type === "joined") {
-        console.log("Você entrou na sala");
-      }
-      if (data.type === "your_match") {
-        setMyMatch(data.match);
-      }
-      if (data.type === "participant_added") {
-        console.log("alguem entrou na sala", { data });
-      }
-      if (data.type === "error") alert("Erro: " + data.message);
-    };
-    return () => ws.close();
-  }, [user?.id]);
 
   function join(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,7 +26,7 @@ export default function JoinRoom({ onBack }: { onBack: () => void }) {
 
     setUser({ id: payload.clientId, name: name || "Guest" });
     setRoomId(roomId);
-    wsRef.current?.send(JSON.stringify(payload));
+    addParticipantInRoom({ id: payload.clientId, name: name || "Guest" });
   }
 
   return (
