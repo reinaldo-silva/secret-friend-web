@@ -27,11 +27,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-50 text-zinc-900 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 min-h-screen`}
       >
         <WebSocketProvider>
           <ServerIsAlive />
-          <div className="max-w-4xl mx-auto p-6">{children}</div>
+          <div className="max-w-4xl mx-auto">{children}</div>
         </WebSocketProvider>
       </body>
     </html>
