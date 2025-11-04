@@ -5,7 +5,7 @@ import { User } from "../interfaces/user";
 import { generateId } from "../utils";
 
 export default function JoinRoom({ onBack }: { onBack: () => void }) {
-  const { myMatch, addParticipantInRoom } = useWebSocket();
+  const { myMatch, addParticipantInRoom, sendMessage } = useWebSocket();
   const [roomId, setRoomId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
@@ -27,6 +27,7 @@ export default function JoinRoom({ onBack }: { onBack: () => void }) {
     setUser({ id: payload.clientId, name: name || "Guest" });
     setRoomId(roomId);
     addParticipantInRoom({ id: payload.clientId, name: name || "Guest" });
+    sendMessage(payload);
   }
 
   return (
