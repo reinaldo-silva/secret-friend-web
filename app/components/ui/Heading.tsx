@@ -1,13 +1,15 @@
 import clsx from "clsx";
+import { ComponentProps } from "react";
 
-interface IHeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
+interface IHeadingProps extends ComponentProps<"h1"> {
   size?: "sm" | "md" | "lg";
 }
 
 export function Heading({
   size = "lg",
-  className = "",
+  className,
   children,
+  ...props
 }: Readonly<IHeadingProps>) {
   const sizeClasses = {
     sm: "text-xl",
@@ -16,7 +18,7 @@ export function Heading({
   };
 
   return (
-    <h1 className={clsx(sizeClasses[size], "font-bold", className)}>
+    <h1 className={clsx(sizeClasses[size], "font-bold", className)} {...props}>
       {children}
     </h1>
   );

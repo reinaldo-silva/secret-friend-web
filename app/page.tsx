@@ -1,9 +1,10 @@
 "use client";
 import { Gift, Shuffle } from "lucide-react";
-import { Text } from "./components/ui/Text";
-import { Heading } from "./components/ui/Heading";
 import { Button } from "./components/ui/Button";
+import { Card } from "./components/ui/Card";
+import { Heading } from "./components/ui/Heading";
 import { Input } from "./components/ui/Input";
+import { Text } from "./components/ui/Text";
 
 export default function Home() {
   const step = "create";
@@ -27,7 +28,7 @@ export default function Home() {
         Ir para Salas de Sorteio
       </Link> */}
 
-      <div className="gap-2 flex">
+      <Card className="gap-2 flex flex-col w-full animate-fade-in">
         <Button>
           <Shuffle className="size-4 mr-4" />
 
@@ -37,8 +38,8 @@ export default function Home() {
         </Button>
         <Button variant="ghost">Criar Novo Sorteio</Button>
         <Button variant="outline">Criar Novo Sorteio</Button>
-      </div>
-      <Input label="Ola" />
+        <Input label="Nome do usuário" />
+      </Card>
 
       <main className="w-full flex-1 flex items-center justify-center"></main>
 

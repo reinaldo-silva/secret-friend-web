@@ -1,13 +1,15 @@
 import clsx from "clsx";
+import { ComponentProps } from "react";
 
-interface ITextProps extends React.HTMLAttributes<HTMLSpanElement> {
+interface ITextProps extends ComponentProps<"span"> {
   size?: "sm" | "base" | "lg";
 }
 
 export function Text({
   size = "base",
-  className = "",
+  className,
   children,
+  ...props
 }: Readonly<ITextProps>) {
   const sizeClasses = {
     sm: "text-sm",
@@ -15,5 +17,9 @@ export function Text({
     lg: "text-lg",
   };
 
-  return <span className={clsx(sizeClasses[size], className)}>{children}</span>;
+  return (
+    <span className={clsx(sizeClasses[size], className)} {...props}>
+      {children}
+    </span>
+  );
 }
