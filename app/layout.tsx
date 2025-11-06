@@ -1,8 +1,9 @@
+import { Gift } from "lucide-react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Heading } from "./components/ui/Heading";
+import { Text } from "./components/ui/Text";
 import "./globals.css";
-import { ServerIsAlive } from "./components/ServerIsAlive";
-import { WebSocketProvider } from "./contexts/WebsocketContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,27 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 min-h-screen`}
       >
-        <WebSocketProvider>
-          <ServerIsAlive />
-          <div className="max-w-4xl mx-auto">{children}</div>
-        </WebSocketProvider>
+        <div className="min-h-screen flex flex-col items-center justify-center p-6">
+          <header className="mb-12 text-center animate-fade-in">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="size-12 rounded-xl flex items-center justify-center bg-gradient text-zinc-50">
+                <Gift className="size-6" />
+              </div>
+              <Heading>Amigo Secreto</Heading>
+            </div>
+            <p className="text-lg">
+              Crie seu sorteio de forma simples e divertida
+            </p>
+          </header>
+
+          {children}
+
+          <footer className="mt-12 text-center text-sm animate-fade-in">
+            <Text size="sm">
+              Feito com ❤️ para tornar seu amigo secreto especial
+            </Text>
+          </footer>
+        </div>
       </body>
     </html>
   );
