@@ -18,7 +18,7 @@ export function Text({
   };
 
   return (
-    <span className={clsx(sizeClasses[size], className)} {...props}>
+    <span className={clsx(sizeClasses[size], "text-zinc-800", className)} {...props}>
       {children}
     </span>
   );

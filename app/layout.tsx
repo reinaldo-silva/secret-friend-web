@@ -1,6 +1,9 @@
 import { Gift } from "lucide-react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { cookies } from "next/headers";
+import { ClientOnly } from "./components/ClientOnly";
+import { ExitButton } from "./components/ExitButton";
 import { Heading } from "./components/ui/Heading";
 import { Text } from "./components/ui/Text";
 import "./globals.css";
@@ -20,17 +23,29 @@ export const metadata: Metadata = {
   description: "Frontend para sorteio de amigo secreto",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const userLocal = cookieStore.has("userLocal");
+
   return (
     <html lang="pt-BR">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 min-h-screen`}
       >
         <div className="min-h-screen flex flex-col items-center justify-center p-6">
+          {userLocal && (
+            <ClientOnly
+              fallback={
+                <div className="fixed top-4 left-4 bg-zinc-200 w-14 h-[26px] animate-pulse rounded-sm" />
+              }
+            >
+              <ExitButton />
+            </ClientOnly>
+          )}
           <header className="mb-12 text-center animate-fade-in">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="size-12 rounded-xl flex items-center justify-center bg-gradient text-zinc-50">
@@ -43,7 +58,9 @@ export default function RootLayout({
             </p>
           </header>
 
-          {children}
+          <main className="flex-1 flex justify-center items-center">
+            {children}
+          </main>
 
           <footer className="mt-12 text-center text-sm animate-fade-in">
             <Text size="sm">

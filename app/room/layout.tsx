@@ -1,19 +1,17 @@
-"use client";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ServerIsAlive } from "../components/ServerIsAlive";
 import { WebSocketProvider } from "../contexts/WebsocketContext";
-import { LocalStorage } from "../utils/localstorage";
 
-const localStorage = new LocalStorage();
-
-export default function RoomLayout({
+export default async function RoomLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const localUser = localStorage.get("localUser");
+  const cookieStore = await cookies();
+  const userLocal = cookieStore.has("userLocal");
 
-  if (!localUser) {
+  if (!userLocal) {
     redirect("/");
   }
 

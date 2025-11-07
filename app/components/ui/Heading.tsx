@@ -18,7 +18,7 @@ export function Heading({
   };
 
   return (
-    <h1 className={clsx(sizeClasses[size], "font-bold", className)} {...props}>
+    <h1 className={clsx(sizeClasses[size], "font-bold text-zinc-800", className)} {...props}>
       {children}
     </h1>
   );
