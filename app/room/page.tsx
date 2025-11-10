@@ -1,25 +1,56 @@
 "use client";
 import { useState } from "react";
-import CreateRoom from "../components/CreateRoom";
-import JoinRoom from "../components/JoinRoom";
+import { CreateRoom } from "../components/CreateRoom";
+import { Button } from "../components/ui/Button";
+import { ButtonArrowLeft } from "../components/ui/ButtonArrowLeft";
+import { Card } from "../components/ui/Card";
+import { Heading } from "../components/ui/Heading";
+import { Input } from "../components/ui/Input";
+import { Text } from "../components/ui/Text";
 
 export default function RoomPage() {
-  const [mode, setMode] = useState<"home" | "create" | "join">("home");
+  const [step, setStep] = useState<"home" | "create" | "join">("home");
 
   return (
-    <main className="flex-1">
-      {mode === "home" && (
-        <div className="space-x-3">
-          <button onClick={() => setMode("create")} className="btn">
-            Criar Sorteio
-          </button>
-          <button onClick={() => setMode("join")} className="btn-outline">
-            Entrar em Sorteio
-          </button>
-        </div>
+    <Card className="flex flex-col w-full gap-2 max-w-xl animate-fade-in">
+      {step !== "home" && (
+        <ButtonArrowLeft
+          description="Voltar"
+          onClick={() => setStep("home")}
+          className="mr-auto"
+        />
       )}
-      {mode === "create" && <CreateRoom onBack={() => setMode("home")} />}
-      {mode === "join" && <JoinRoom onBack={() => setMode("home")} />}
-    </main>
+      {step === "home" && (
+        <>
+          <div className="mb-4 text-center">
+            <Heading size="sm">Seja bem vindo, Reinaldo!</Heading>
+            <Text>escolha uma opção abaixo</Text>
+          </div>
+
+          <Button
+            className="w-full"
+            type="button"
+            onClick={() => setStep("create")}
+          >
+            Criar Sorteio
+          </Button>
+
+          <Button
+            variant="ghost"
+            className="w-full"
+            onClick={() => setStep("join")}
+          >
+            Entrar em uma sala
+          </Button>
+        </>
+      )}
+
+      {step === "create" && <CreateRoom />}
+      {step === "join" && (
+        <form>
+          <Input type="text" placeholder="Digite o código da sala" required />
+        </form>
+      )}
+    </Card>
   );
 }

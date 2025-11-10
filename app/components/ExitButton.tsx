@@ -1,8 +1,7 @@
 "use client";
 import Cookies from "js-cookie";
-import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Text } from "./ui/Text";
+import { ButtonArrowLeft } from "./ui/ButtonArrowLeft";
 
 export function ExitButton() {
   const router = useRouter();
@@ -13,15 +12,11 @@ export function ExitButton() {
   };
 
   return (
-    <button
-      className="absolute top-4 px-1 py-0.5 left-4 flex items-center gap-2 border-b-2 cursor-pointer hover:opacity-60 animate-fade-in"
-      onClick={handleLeaveApp}
+    <ButtonArrowLeft
+      description="Sair"
       type="button"
-    >
-      <ArrowLeft size={16} />
-      <Text size="sm" className="font-semibold">
-        Sair
-      </Text>
-    </button>
+      onClick={handleLeaveApp}
+      className="absolute top-4 px-1 py-0.5 left-4 animate-fade-in"
+    />
   );
 }

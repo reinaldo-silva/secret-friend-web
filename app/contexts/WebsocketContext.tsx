@@ -13,7 +13,6 @@ import React, {
 import { io, Socket } from "socket.io-client";
 import { Room, User } from "../interfaces/user";
 import { generateId, saveAdminMapping } from "../utils";
-import { LocalUser } from "../utils/localUser";
 
 export enum SERVER_STATUS {
   ALIVE = "ALIVE",
@@ -35,12 +34,17 @@ const WebSocketContext = createContext<WebSocketContextType | undefined>(
   undefined
 );
 
-export function WebSocketProvider({ children }: { children: React.ReactNode }) {
+export function WebSocketProvider({
+  children,
+  currentUser,
+}: {
+  children: React.ReactNode;
+  currentUser: User;
+}) {
   const [status, setStatus] = useState<SERVER_STATUS>(SERVER_STATUS.CHECKING);
   const [myMatch, setMyMatch] = useState<User | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
-  const currentUser = useMemo(() => new LocalUser().user, []);
   const roomId = room?.slug;
 
   const handleMessage = useCallback(

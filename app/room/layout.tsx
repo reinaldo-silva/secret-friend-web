@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ServerIsAlive } from "../components/ServerIsAlive";
 import { WebSocketProvider } from "../contexts/WebsocketContext";
+import { User } from "../interfaces/user";
 
 export default async function RoomLayout({
   children,
@@ -9,14 +10,14 @@ export default async function RoomLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const userLocal = cookieStore.has("userLocal");
+  const userLocal = cookieStore.get("userLocal")?.value;
 
   if (!userLocal) {
     redirect("/");
   }
 
   return (
-    <WebSocketProvider>
+    <WebSocketProvider currentUser={JSON.parse(userLocal) as User}>
       <ServerIsAlive />
       {children}
     </WebSocketProvider>

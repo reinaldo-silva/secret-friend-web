@@ -58,7 +58,7 @@ export default async function RootLayout({
             </p>
           </header>
 
-          <main className="flex-1 flex justify-center items-center">
+          <main className="flex-1 flex justify-center items-center w-full">
             {children}
           </main>
 
