@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useEffectEvent,
   useMemo,
   useRef,
   useState,
@@ -79,36 +80,35 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     [roomId]
   );
 
-  useEffect(() => {
+  const handlerStartSocket = useEffectEvent(() => {
     const socket = io(process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3000");
     socketRef.current = socket;
-    socket.connect();
-  }, []);
+
+    console.log(9090);
+
+    socketRef.current.on("connect", () => {
+      console.log("✅ WebSocket conectado");
+      setStatus(SERVER_STATUS.ALIVE);
+    });
+
+    socketRef.current.on("disconnect", () => {
+      console.log("❌ WebSocket desconectado");
+      setStatus(SERVER_STATUS.DOWN);
+    });
+
+    socketRef.current.onAny((event, data) => {
+      console.log("📩 Recebido:", event, data);
+      handleMessage(data);
+    });
+
+    socketRef.current.on("connect_error", (error) => {
+      console.error("⚠️ Erro WebSocket:", error);
+    });
+  });
 
   useEffect(() => {
-    if (!socketRef.current) return;
-
-    if (status !== SERVER_STATUS.ALIVE) {
-      socketRef.current.on("connect", () => {
-        console.log("✅ WebSocket conectado");
-        setStatus(SERVER_STATUS.ALIVE);
-      });
-
-      socketRef.current.on("disconnect", () => {
-        console.log("❌ WebSocket desconectado");
-        setStatus(SERVER_STATUS.DOWN);
-      });
-
-      socketRef.current.onAny((event, data) => {
-        console.log("📩 Recebido:", event, data);
-        handleMessage(data);
-      });
-
-      socketRef.current.on("connect_error", (error) => {
-        console.error("⚠️ Erro WebSocket:", error);
-      });
-    }
-  }, [handleMessage, status]);
+    handlerStartSocket();
+  }, []);
 
   const sendMessage = useCallback((data: any) => {
     const socket = socketRef.current;
