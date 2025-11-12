@@ -8,7 +8,13 @@ interface Room {
   name?: string;
   participants: User[];
   admin: User;
-  cretedAt?: Date;
 }
 
-export type { User, Room };
+interface RoomServer {
+  id: string;
+  name?: string;
+  adminId: string;
+  participants: User[];
+}
+
+export type { User, Room, RoomServer };

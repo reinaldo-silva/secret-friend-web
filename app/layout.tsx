@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import { Gift } from "lucide-react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -36,6 +37,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 min-h-screen`}
       >
+        <Toaster />
         <div className="min-h-screen flex flex-col items-center justify-center p-6">
           {userLocal && (
             <ClientOnly

@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
+import { toast } from "sonner";
 import { ClientOnly } from "./components/ClientOnly";
 import { Button } from "./components/ui/Button";
 import { Card } from "./components/ui/Card";
@@ -16,7 +17,7 @@ export function InitialForm() {
     const name = new FormData(e.currentTarget).get("name")?.toString().trim();
 
     if (!name) {
-      alert("Por favor, insira um nome válido.");
+      toast("Por favor, insira um nome válido.");
       return;
     }
     new LocalUser(name);

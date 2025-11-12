@@ -7,7 +7,7 @@ interface IInputProps extends ComponentProps<"input"> {
 
 export function Input({ label, className, ...props }: Readonly<IInputProps>) {
   return (
-    <label className="flex flex-col">
+    <label className="flex flex-col flex-1">
       {label && (
         <span className="mb-1 text-sm font-semibold text-zinc-700">
           {label}

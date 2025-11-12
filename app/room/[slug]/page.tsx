@@ -1,3 +1,7 @@
+import { ClientOnly } from "@/app/components/ClientOnly";
+import { AddParticipantForm } from "./AddParticipantForm";
+import { ParticipantsCard } from "./Participants";
+
 export default async function newRoom({
   params,
 }: {
@@ -6,8 +10,11 @@ export default async function newRoom({
   const { slug } = await params;
 
   return (
-    <main>
-      <h1 className="text-2xl font-semibold mb-4">Sala: {slug}</h1>
+    <main className="w-full max-w-xl animate-fade-in flex flex-col gap-2">
+      <AddParticipantForm />
+      <ClientOnly>
+        <ParticipantsCard slug={slug} />
+      </ClientOnly>
     </main>
   );
 }

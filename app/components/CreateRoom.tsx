@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
+import { toast } from "sonner";
 import { useWebSocket } from "../contexts/WebsocketContext";
 import { Button } from "./ui/Button";
 import { Heading } from "./ui/Heading";
@@ -19,7 +20,7 @@ export function CreateRoom() {
     const roomName = formData.get("roomName")?.toString().trim();
 
     if (!roomName) {
-      alert("Room name cannot be empty.");
+      toast("Room name cannot be empty.");
       return;
     }
 
@@ -36,25 +37,6 @@ export function CreateRoom() {
     sendMessage(payload);
     router.push(`/room/${slug}`);
   }
-
-  // function addManual() {
-  //   if (!room) return;
-
-  //   const pid = generateId("p_");
-  //   const pname = prompt("Nome do participante") || "Pessoa";
-  //   const payload = {
-  //     type: "add_participant",
-  //     roomId: room.slug,
-  //     adminId: room.admin.id,
-  //     participantId: pid,
-  //     name: pname,
-  //   };
-
-  //   const newParticipant: User = { id: pid, name: pname };
-
-  //   addParticipantInRoom(newParticipant);
-  //   sendMessage(payload);
-  // }
 
   // function startDraw() {
   //   if (!room) return;

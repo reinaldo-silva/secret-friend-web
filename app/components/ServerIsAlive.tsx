@@ -41,12 +41,7 @@ export function ServerIsAlive() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="
-        fixed top-4 right-4 flex items-center gap-2 px-4 py-2 
-        rounded-xl border text-sm font-medium
-        bg-linear-to-r from-purple-100 to-pink-100 text-purple-800 
-        border-purple-300 shadow-lg shadow-purple-200/50
-      "
+      className="fixed top-4 right-4 flex items-center gap-2 badge-gradient"
     >
       {icon}
       <span>{text}</span>

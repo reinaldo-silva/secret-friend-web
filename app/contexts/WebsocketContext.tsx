@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { useRouter } from "next/navigation";
 import React, {
   createContext,
   useCallback,
@@ -11,7 +12,8 @@ import React, {
   useState,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import { Room, User } from "../interfaces/user";
+import { toast } from "sonner";
+import { Room, RoomServer, User } from "../interfaces/user";
 import { generateId, saveAdminMapping } from "../utils";
 
 export enum SERVER_STATUS {
@@ -41,6 +43,7 @@ export function WebSocketProvider({
   children: React.ReactNode;
   currentUser: User;
 }) {
+  const router = useRouter();
   const [status, setStatus] = useState<SERVER_STATUS>(SERVER_STATUS.CHECKING);
   const [myMatch, setMyMatch] = useState<User | null>(null);
   const socketRef = useRef<Socket | null>(null);
@@ -70,25 +73,38 @@ export function WebSocketProvider({
           break;
         case "draw_result_admin": {
           if (roomId) saveAdminMapping(roomId, data.mapping);
-          alert("Sorteio realizado. Mapeamento salvo no localStorage.");
+          toast("Sorteio realizado. Mapeamento salvo no localStorage.");
           break;
         }
         case "your_match":
           setMyMatch(data.match);
           break;
+        case "room_found":
+          const { id, participants, name }: RoomServer = data.room;
+
+          setRoom({ admin: currentUser, participants, name, slug: id });
+          break;
         case "error":
-          alert("Erro: " + data.message);
+          const currentPath =
+            typeof window !== "undefined" ? window.location.pathname : "";
+
+          if (
+            currentPath.includes(`/room/`) &&
+            data.message === "not_authorized"
+          ) {
+            router.push("/room");
+          }
+
+          toast("Erro: " + data.message);
           break;
       }
     },
-    [roomId]
+    [roomId, currentUser, router]
   );
 
   const handlerStartSocket = useEffectEvent(() => {
     const socket = io(process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3000");
     socketRef.current = socket;
-
-    console.log(9090);
 
     socketRef.current.on("connect", () => {
       console.log("✅ WebSocket conectado");
