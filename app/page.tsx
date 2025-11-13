@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { InitialForm } from "./components/InitialForm";
 import { InfoCard } from "./components/ui/InfoCard";
-import { InitialForm } from "./initialForm";
 
 export default async function Home() {
   const cookieStore = await cookies();

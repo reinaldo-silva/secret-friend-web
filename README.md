@@ -20,7 +20,7 @@ Frontend em Next (app router) + Tailwind v4 para conectar ao backend WebSocket.
 [ ] - Aside bar
 [X] - Join Form
 [ ] - remove participant do sorteio
-[ ] - Iniciar soretio button
+[X] - Iniciar soretio button
 [ ] - Lista das salas criadas
 [ ] - Validar se o sorteio ja foi feito, e redirecionar para a pagina result
 [ ] - Admin poder compartilhar link dos resultados das pessoas

@@ -1,3 +1,4 @@
+import { ButtonResult } from "@/app/components/ButtonResult";
 import { ClientOnly } from "@/app/components/ClientOnly";
 import { ParticipantsCard } from "@/app/components/Participants";
 import { RoomInformation } from "@/app/components/RoomInformation";
@@ -14,6 +15,7 @@ export default async function JoinPage({
       <ClientOnly>
         <ParticipantsCard slug={slug} />
       </ClientOnly>
+      <ButtonResult slug={slug} />
     </main>
   );
 }

@@ -88,10 +88,15 @@ export function WebSocketProvider({
           break;
         }
         case "your_match":
+          setRoom((oldValue) =>
+            oldValue ? { ...oldValue, alreadyDraw: true } : null
+          );
           setMyMatch(data.match);
+          toast("Você recebeu um par.");
           break;
         case "room_found":
-          const { id, participants, name, adminId }: RoomServer = data.room;
+          const { id, participants, name, adminId, alreadyDraw }: RoomServer =
+            data.room;
 
           if (adminId === currentUser.id) {
             router.push(`/room/${id}`);
@@ -102,7 +107,13 @@ export function WebSocketProvider({
           const adminUser =
             participants.find((usr) => usr.id === adminId) || ({} as User);
 
-          setRoom({ admin: adminUser, participants, name, slug: id });
+          setRoom({
+            admin: adminUser,
+            participants,
+            name,
+            slug: id,
+            alreadyDraw,
+          });
           break;
         case "error":
           const currentPath =
@@ -122,12 +133,22 @@ export function WebSocketProvider({
     [roomId, currentUser, router]
   );
 
+  const sendMessage = useCallback((data: any) => {
+    const socket = socketRef.current;
+    if (socket && socket.connected) {
+      socket.emit("message", data);
+    } else {
+      console.warn("🚫 Tentou enviar mensagem sem conexão ativa");
+    }
+  }, []);
+
   const handlerStartSocket = useEffectEvent(() => {
     const socket = io(process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3000");
     socketRef.current = socket;
 
     socketRef.current.on("connect", () => {
       console.log("✅ WebSocket conectado");
+      sendMessage({ type: "connect_server", user: currentUser });
       setStatus(SERVER_STATUS.ALIVE);
     });
 
@@ -152,27 +173,18 @@ export function WebSocketProvider({
     handlerStartSocket();
   }, []);
 
-  const sendMessage = useCallback((data: any) => {
-    const socket = socketRef.current;
-    if (socket && socket.connected) {
-      socket.emit("message", data);
-    } else {
-      console.warn("🚫 Tentou enviar mensagem sem conexão ativa");
-    }
-  }, []);
-
   const handleCreateRoom = useCallback(
     (roomName: string) => {
       if (!currentUser) {
         throw new Error("Current user is not set");
       }
 
-      const newRoom = {
+      const newRoom: Room = {
         slug: generateId("r_"),
         name: roomName,
         admin: currentUser,
         participants: [currentUser],
-        createdAt: new Date(),
+        alreadyDraw: false,
       };
       setRoom(newRoom);
 

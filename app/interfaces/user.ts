@@ -8,6 +8,7 @@ interface Room {
   name?: string;
   participants: User[];
   admin: User;
+  alreadyDraw: boolean;
 }
 
 interface RoomServer {
@@ -15,6 +16,7 @@ interface RoomServer {
   name?: string;
   adminId: string;
   participants: User[];
+  alreadyDraw: boolean;
 }
 
 export type { User, Room, RoomServer };

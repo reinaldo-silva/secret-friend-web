@@ -1,3 +1,4 @@
+import { ButtonDraw } from "@/app/components/ButtonDraw";
 import { ClientOnly } from "@/app/components/ClientOnly";
 import { RoomInformation } from "@/app/components/RoomInformation";
 import { AddParticipantForm } from "../../components/AddParticipantForm";
@@ -17,6 +18,7 @@ export default async function newRoom({
       <ClientOnly>
         <ParticipantsCard slug={slug} />
       </ClientOnly>
+      <ButtonDraw />
     </main>
   );
 }

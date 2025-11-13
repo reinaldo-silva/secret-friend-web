@@ -2,12 +2,12 @@
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import { toast } from "sonner";
-import { ClientOnly } from "./components/ClientOnly";
-import { Button } from "./components/ui/Button";
-import { Card } from "./components/ui/Card";
-import { Heading } from "./components/ui/Heading";
-import { Input } from "./components/ui/Input";
-import { LocalUser } from "./utils/localUser";
+import { LocalUser } from "../utils/localUser";
+import { ClientOnly } from "./ClientOnly";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
+import { Heading } from "./ui/Heading";
+import { Input } from "./ui/Input";
 
 export function InitialForm() {
   const router = useRouter();
