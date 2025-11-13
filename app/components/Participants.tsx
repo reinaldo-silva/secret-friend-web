@@ -4,6 +4,7 @@ import { Heading } from "@/app/components/ui/Heading";
 import { SERVER_STATUS, useWebSocket } from "@/app/contexts/WebsocketContext";
 import { Crown } from "lucide-react";
 import { useEffect, useEffectEvent } from "react";
+import { Loader } from "./Loader";
 
 export function ParticipantsCard({ slug }: { slug: string }) {
   const { room, sendMessage, status, currentUser } = useWebSocket();
@@ -22,7 +23,7 @@ export function ParticipantsCard({ slug }: { slug: string }) {
   }, [status, room]);
 
   if (!room) {
-    return null;
+    return <Loader />;
   }
 
   return (

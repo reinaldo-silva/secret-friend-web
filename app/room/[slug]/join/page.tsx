@@ -1,5 +1,6 @@
 import { ClientOnly } from "@/app/components/ClientOnly";
 import { ParticipantsCard } from "@/app/components/Participants";
+import { RoomInformation } from "@/app/components/RoomInformation";
 
 export default async function JoinPage({
   params,
@@ -9,6 +10,7 @@ export default async function JoinPage({
   const { slug } = await params;
   return (
     <main className="w-full max-w-xl animate-fade-in flex flex-col gap-2">
+      <RoomInformation />
       <ClientOnly>
         <ParticipantsCard slug={slug} />
       </ClientOnly>
