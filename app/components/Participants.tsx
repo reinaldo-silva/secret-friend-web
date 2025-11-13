@@ -6,7 +6,7 @@ import { Crown } from "lucide-react";
 import { useEffect, useEffectEvent } from "react";
 
 export function ParticipantsCard({ slug }: { slug: string }) {
-  const { room, sendMessage, status } = useWebSocket();
+  const { room, sendMessage, status, currentUser } = useWebSocket();
 
   const getRoomById = useEffectEvent(() => {
     sendMessage({
@@ -35,6 +35,9 @@ export function ParticipantsCard({ slug }: { slug: string }) {
               <span className="truncate max-w-[120px]">{p.name}</span>
               {p.id === room.admin.id && (
                 <Crown size={18} className="text-yellow-500" />
+              )}
+              {p.id === currentUser?.id && (
+                <span className="text-blue-500">(You)</span>
               )}
             </div>
           </div>

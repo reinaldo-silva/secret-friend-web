@@ -99,7 +99,10 @@ export function WebSocketProvider({
             router.push(`/room/${id}/join`);
           }
 
-          setRoom({ admin: currentUser, participants, name, slug: id });
+          const adminUser =
+            participants.find((usr) => usr.id === adminId) || ({} as User);
+
+          setRoom({ admin: adminUser, participants, name, slug: id });
           break;
         case "error":
           const currentPath =
