@@ -1,21 +1,27 @@
 "use client";
 import Cookies from "js-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClientOnly } from "../components/ClientOnly";
 import { CreateRoom } from "../components/CreateRoom";
+import JoinRoom from "../components/JoinRoom";
 import { Button } from "../components/ui/Button";
 import { ButtonArrowLeft } from "../components/ui/ButtonArrowLeft";
 import { Card } from "../components/ui/Card";
 import { Heading } from "../components/ui/Heading";
-import { Input } from "../components/ui/Input";
 import { Text } from "../components/ui/Text";
+import { useWebSocket } from "../contexts/WebsocketContext";
 import { User } from "../interfaces/user";
 
 export default function RoomPage() {
   const [step, setStep] = useState<"home" | "create" | "join">("home");
   const userLocal: User = JSON.parse(Cookies.get("userLocal") || "{}");
+  const { clearRoom } = useWebSocket();
 
   const isUserValid = userLocal && userLocal.name;
+
+  useEffect(() => {
+    clearRoom();
+  }, [clearRoom]);
 
   if (!isUserValid) {
     return null;
@@ -57,11 +63,7 @@ export default function RoomPage() {
         )}
 
         {step === "create" && <CreateRoom />}
-        {step === "join" && (
-          <form>
-            <Input type="text" placeholder="Digite o código da sala" required />
-          </form>
-        )}
+        {step === "join" && <JoinRoom />}
       </Card>
     </ClientOnly>
   );

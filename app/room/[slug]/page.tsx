@@ -1,6 +1,6 @@
 import { ClientOnly } from "@/app/components/ClientOnly";
-import { AddParticipantForm } from "./AddParticipantForm";
-import { ParticipantsCard } from "./Participants";
+import { AddParticipantForm } from "../../components/AddParticipantForm";
+import { ParticipantsCard } from "../../components/Participants";
 
 export default async function newRoom({
   params,

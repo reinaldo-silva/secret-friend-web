@@ -28,8 +28,8 @@ type WebSocketContextType = {
   room: Room | null;
   currentUser: User | null;
   handleCreateRoom: (roomName: string) => Room;
-  addParticipantInRoom: (participant: User) => void;
   myMatch: User | null;
+  clearRoom: () => void;
 };
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(
@@ -50,13 +50,23 @@ export function WebSocketProvider({
   const [room, setRoom] = useState<Room | null>(null);
   const roomId = room?.slug;
 
+  function clearRoom() {
+    setRoom(null);
+  }
+
   const handleMessage = useCallback(
     (data: any) => {
       switch (data.type) {
         case "room_created":
+          const { roomId: roomIdCreated } = data;
+
+          router.push(`/room/${roomIdCreated}`);
           console.log("Sala criada com sucesso", data);
           break;
         case "joined":
+          const { roomId: roomIdJoined } = data;
+          router.push(`/room/${roomIdJoined}/join`);
+
           console.log("Você entrou na sala", data);
           break;
         case "participant_added":
@@ -70,6 +80,7 @@ export function WebSocketProvider({
               participants: [...prev.participants, data.participant],
             };
           });
+          toast(`${data.participant.name} está participando do sorteio`);
           break;
         case "draw_result_admin": {
           if (roomId) saveAdminMapping(roomId, data.mapping);
@@ -80,7 +91,13 @@ export function WebSocketProvider({
           setMyMatch(data.match);
           break;
         case "room_found":
-          const { id, participants, name }: RoomServer = data.room;
+          const { id, participants, name, adminId }: RoomServer = data.room;
+
+          if (adminId === currentUser.id) {
+            router.push(`/room/${id}`);
+          } else {
+            router.push(`/room/${id}/join`);
+          }
 
           setRoom({ admin: currentUser, participants, name, slug: id });
           break;
@@ -127,6 +144,8 @@ export function WebSocketProvider({
   });
 
   useEffect(() => {
+    console.log(!!socketRef.current);
+
     handlerStartSocket();
   }, []);
 
@@ -159,16 +178,6 @@ export function WebSocketProvider({
     [currentUser]
   );
 
-  const addParticipantInRoom = useCallback((participant: User) => {
-    setRoom((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        participants: [...prev.participants, participant],
-      };
-    });
-  }, []);
-
   const value = useMemo(
     () => ({
       status,
@@ -176,18 +185,10 @@ export function WebSocketProvider({
       currentUser,
       room,
       handleCreateRoom,
-      addParticipantInRoom,
+      clearRoom,
       myMatch,
     }),
-    [
-      status,
-      sendMessage,
-      currentUser,
-      room,
-      handleCreateRoom,
-      addParticipantInRoom,
-      myMatch,
-    ]
+    [status, sendMessage, currentUser, room, handleCreateRoom, myMatch]
   );
 
   return (

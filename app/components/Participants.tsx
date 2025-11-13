@@ -6,13 +6,12 @@ import { Crown } from "lucide-react";
 import { useEffect, useEffectEvent } from "react";
 
 export function ParticipantsCard({ slug }: { slug: string }) {
-  const { room, sendMessage, currentUser, status } = useWebSocket();
+  const { room, sendMessage, status } = useWebSocket();
 
   const getRoomById = useEffectEvent(() => {
     sendMessage({
       type: "get_room_by_id",
       roomId: slug,
-      adminId: currentUser?.id,
     });
   });
 

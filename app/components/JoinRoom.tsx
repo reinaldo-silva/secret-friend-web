@@ -1,62 +1,59 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { FormEvent } from "react";
+import { toast } from "sonner";
 import { useWebSocket } from "../contexts/WebsocketContext";
-import { User } from "../interfaces/user";
-import { generateId } from "../utils";
+import { Button } from "./ui/Button";
+import { Heading } from "./ui/Heading";
+import { Input } from "./ui/Input";
+import { Text } from "./ui/Text";
 
-export default function JoinRoom({ onBack }: { onBack: () => void }) {
-  const { myMatch, addParticipantInRoom, sendMessage } = useWebSocket();
-  const [roomId, setRoomId] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+export default function JoinRoom() {
+  const { sendMessage, currentUser } = useWebSocket();
 
   function join(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    if (!currentUser) {
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
 
-    const name = formData.get("name")?.toString().trim() || undefined;
-    const roomId = formData.get("roomId")?.toString().trim() || "";
+    const roomId = formData.get("roomId")?.toString().trim();
+
+    if (!roomId) {
+      toast("Room name cannot be empty.");
+      return;
+    }
 
     const payload = {
       type: "join_room",
       roomId,
-      clientId: generateId("p_"),
-      name: name,
+      clientId: currentUser.id,
+      name: currentUser.name,
     };
 
-    setUser({ id: payload.clientId, name: name || "Guest" });
-    setRoomId(roomId);
-    addParticipantInRoom({ id: payload.clientId, name: name || "Guest" });
     sendMessage(payload);
   }
 
   return (
-    <div className="mt-6">
-      <button onClick={onBack} className="text-sm underline">
-        ← voltar
-      </button>
-      <div className="p-4 bg-white rounded shadow mt-2">
-        <form onSubmit={join}>
-          <label className="block text-sm mb-1">Room ID</label>
-          <input className="input" name="roomId" disabled={!!roomId} />
-          <label className="block text-sm mt-2 mb-1">Seu nome</label>
-          <input className="input" name="name" disabled={!!roomId} />
-          <div className="mt-3">
-            <button type="submit" className="btn" disabled={!!roomId}>
-              Entrar
-            </button>
-          </div>
-        </form>
-
-        {roomId && user && <p className="mt-4">Entrou na sala {roomId}</p>}
-
-        {myMatch && (
-          <div className="mt-4 p-3 bg-zinc-50 rounded">
-            <h4 className="font-medium">Seu amigo secreto:</h4>
-            <div className="mt-2">{myMatch.name}</div>
-          </div>
-        )}
+    <form onSubmit={join} className="flex flex-col gap-2 text-center">
+      <div className="mb-4">
+        <Heading size="sm">Entre em um sorteio!</Heading>
+        <Text>Digite o código de algum sorteio já existente</Text>
       </div>
-    </div>
+      <div className="flex items-center gap-2">
+        <Input
+          type="text"
+          placeholder="Digite o código da sala"
+          required
+          name="roomId"
+        />
+        <Button>
+          <ArrowRight />
+        </Button>
+      </div>
+    </form>
   );
 }

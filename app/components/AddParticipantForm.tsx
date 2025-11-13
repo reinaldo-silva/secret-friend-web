@@ -5,14 +5,13 @@ import { Card } from "@/app/components/ui/Card";
 import { Heading } from "@/app/components/ui/Heading";
 import { Input } from "@/app/components/ui/Input";
 import { useWebSocket } from "@/app/contexts/WebsocketContext";
-import { User } from "@/app/interfaces/user";
 import { generateId } from "@/app/utils";
 import { Clipboard, Plus } from "lucide-react";
 import { FormEvent } from "react";
 import { toast } from "sonner";
 
 export function AddParticipantForm() {
-  const { room, addParticipantInRoom, sendMessage } = useWebSocket();
+  const { room, sendMessage } = useWebSocket();
 
   function addManual(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,9 +36,6 @@ export function AddParticipantForm() {
       name: participantName,
     };
 
-    const newParticipant: User = { id: pid, name: participantName };
-
-    addParticipantInRoom(newParticipant);
     sendMessage(payload);
     e.currentTarget.reset();
   }

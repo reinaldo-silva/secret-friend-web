@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import { toast } from "sonner";
 import { useWebSocket } from "../contexts/WebsocketContext";
@@ -10,7 +9,6 @@ import { Text } from "./ui/Text";
 
 export function CreateRoom() {
   const { sendMessage, handleCreateRoom } = useWebSocket();
-  const router = useRouter();
 
   function create(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,7 +33,6 @@ export function CreateRoom() {
     };
 
     sendMessage(payload);
-    router.push(`/room/${slug}`);
   }
 
   // function startDraw() {
