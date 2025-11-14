@@ -15,6 +15,8 @@ import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import { Room, RoomServer, User } from "../interfaces/user";
 import { generateId, saveAdminMapping } from "../utils";
+import { need_at_least_two_participants } from "../utils/errors/need_at_least_two_participants";
+import { not_authorized } from "../utils/errors/not_authorized";
 
 export enum SERVER_STATUS {
   ALIVE = "ALIVE",
@@ -116,14 +118,16 @@ export function WebSocketProvider({
           });
           break;
         case "error":
-          const currentPath =
-            typeof window !== "undefined" ? window.location.pathname : "";
+          const mapErrors: Record<string, () => void> = {
+            need_at_least_two_participants: () =>
+              need_at_least_two_participants(),
+            not_authorized: () => not_authorized((path) => router.push(path)),
+          };
 
-          if (
-            currentPath.includes(`/room/`) &&
-            data.message === "not_authorized"
-          ) {
-            router.push("/room");
+          const error = mapErrors[data.message];
+
+          if (error) {
+            return error();
           }
 
           toast("Erro: " + data.message);
