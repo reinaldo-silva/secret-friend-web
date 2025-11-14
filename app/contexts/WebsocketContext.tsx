@@ -17,6 +17,7 @@ import { Room, RoomServer, User } from "../interfaces/user";
 import { generateId, saveAdminMapping } from "../utils";
 import { need_at_least_two_participants } from "../utils/errors/need_at_least_two_participants";
 import { not_authorized } from "../utils/errors/not_authorized";
+import { room_not_found } from "../utils/errors/room_not_found";
 
 export enum SERVER_STATUS {
   ALIVE = "ALIVE",
@@ -122,6 +123,7 @@ export function WebSocketProvider({
             need_at_least_two_participants: () =>
               need_at_least_two_participants(),
             not_authorized: () => not_authorized((path) => router.push(path)),
+            room_not_found: () => room_not_found(),
           };
 
           const error = mapErrors[data.message];

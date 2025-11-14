@@ -27,9 +27,11 @@ export default function JoinRoom() {
       return;
     }
 
+    const id = roomId.split("/").at(-1);
+
     const payload = {
       type: "join_room",
-      roomId,
+      roomId: id,
       clientId: currentUser.id,
       name: currentUser.name,
     };
