@@ -13,7 +13,7 @@ export default async function JoinPage({
     <main className="w-full max-w-xl animate-fade-in flex flex-col gap-2">
       <RoomInformation />
       <ClientOnly>
-        <ParticipantsCard slug={slug} />
+        <ParticipantsCard />
       </ClientOnly>
       <ButtonResult slug={slug} />
     </main>

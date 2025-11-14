@@ -1,26 +1,12 @@
 "use client";
 import { Card } from "@/app/components/ui/Card";
 import { Heading } from "@/app/components/ui/Heading";
-import { SERVER_STATUS, useWebSocket } from "@/app/contexts/WebsocketContext";
+import { useWebSocket } from "@/app/contexts/WebsocketContext";
 import { Crown } from "lucide-react";
-import { useEffect, useEffectEvent } from "react";
 import { Loader } from "./Loader";
 
-export function ParticipantsCard({ slug }: { slug: string }) {
-  const { room, sendMessage, status, currentUser } = useWebSocket();
-
-  const getRoomById = useEffectEvent(() => {
-    sendMessage({
-      type: "get_room_by_id",
-      roomId: slug,
-    });
-  });
-
-  useEffect(() => {
-    if (status === SERVER_STATUS.ALIVE && !room) {
-      getRoomById();
-    }
-  }, [status, room]);
+export function ParticipantsCard() {
+  const { room, currentUser } = useWebSocket();
 
   if (!room) {
     return <Loader />;

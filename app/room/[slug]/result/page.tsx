@@ -1,3 +1,5 @@
+import { ResultMatch } from "@/app/components/ResultMatch";
+
 export default function ResultPage() {
-  return <div>Result</div>;
+  return <ResultMatch />;
 }
