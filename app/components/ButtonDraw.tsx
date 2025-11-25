@@ -1,9 +1,10 @@
 "use client";
 import { useWebSocket } from "../contexts/WebsocketContext";
+import { ButtonResult } from "./ButtonResult";
 import { Loader } from "./Loader";
 import { Button } from "./ui/Button";
 
-export function ButtonDraw() {
+export function ButtonDraw({ slug }: { slug: string }) {
   const { room, sendMessage } = useWebSocket();
 
   function startDraw() {
@@ -24,8 +25,14 @@ export function ButtonDraw() {
   }
 
   return (
-    <Button onClick={startDraw} type="button" className="animate-fade-in">
-      Iniciar sorteio
-    </Button>
+    <>
+      {room.alreadyDraw ? (
+        <ButtonResult slug={slug} />
+      ) : (
+        <Button onClick={startDraw} type="button" className="animate-fade-in">
+          Iniciar sorteio
+        </Button>
+      )}
+    </>
   );
 }

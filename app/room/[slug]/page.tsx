@@ -4,7 +4,13 @@ import { RoomInformation } from "@/app/components/RoomInformation";
 import { AddParticipantForm } from "../../components/AddParticipantForm";
 import { ParticipantsCard } from "../../components/Participants";
 
-export default async function newRoom() {
+export default async function newRoom({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
   return (
     <main className="w-full max-w-xl animate-fade-in flex flex-col gap-2">
       <RoomInformation />
@@ -12,7 +18,7 @@ export default async function newRoom() {
       <ClientOnly>
         <ParticipantsCard />
       </ClientOnly>
-      <ButtonDraw />
+      <ButtonDraw slug={slug} />
     </main>
   );
 }

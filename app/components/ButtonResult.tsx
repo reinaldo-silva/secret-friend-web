@@ -14,6 +14,7 @@ export function ButtonResult({ slug }: { slug: string }) {
     >
       <Button
         className="flex-1"
+        type="button"
         variant={room?.alreadyDraw ? "primary" : "ghost"}
       >
         {room?.alreadyDraw ? "Seu amigo secreto é..." : "Aguardando sorteio..."}

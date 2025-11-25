@@ -98,7 +98,7 @@ export function WebSocketProvider({
           toast("Você recebeu um par.");
           break;
         case "room_found":
-          const { id, participants, name, adminId, alreadyDraw }: RoomServer =
+          const { id, participants, name, adminId, secretList }: RoomServer =
             data.room;
 
           if (adminId === currentUser.id) {
@@ -115,7 +115,8 @@ export function WebSocketProvider({
             participants,
             name,
             slug: id,
-            alreadyDraw,
+            secretList,
+            alreadyDraw: !!secretList,
           });
           break;
         case "error":
