@@ -5,7 +5,7 @@ import { Card } from "@/app/components/ui/Card";
 import { Input } from "@/app/components/ui/Input";
 import { useWebSocket } from "@/app/contexts/WebsocketContext";
 import { generateId } from "@/app/utils";
-import { Plus } from "lucide-react";
+import { Ban, Plus } from "lucide-react";
 import { FormEvent } from "react";
 import { toast } from "sonner";
 import { Text } from "./ui/Text";
@@ -63,9 +63,12 @@ export function AddParticipantForm() {
         </Button>
       </form>
       {room.alreadyDraw && (
-        <Text className="font-semibold text-zinc-400!" size="sm">
-          Não é possível adicionar participantes após o sorteio
-        </Text>
+        <div className="flex gap-2 items-center">
+          <Ban size={14} className="text-red-700" />
+          <Text className="font-semibold text-zinc-400!" size="sm">
+            Não é possível adicionar participantes após o sorteio
+          </Text>
+        </div>
       )}
     </Card>
   );
