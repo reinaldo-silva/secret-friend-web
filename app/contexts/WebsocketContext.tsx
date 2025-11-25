@@ -14,7 +14,7 @@ import React, {
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import { Room, RoomServer, User } from "../interfaces/user";
-import { generateId, saveAdminMapping } from "../utils";
+import { generateId } from "../utils";
 import { need_at_least_two_participants } from "../utils/errors/need_at_least_two_participants";
 import { not_authorized } from "../utils/errors/not_authorized";
 import { room_not_found } from "../utils/errors/room_not_found";
@@ -51,7 +51,6 @@ export function WebSocketProvider({
   const [myMatch, setMyMatch] = useState<User | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
-  const roomId = room?.slug;
 
   function clearRoom() {
     setRoom(null);
@@ -86,8 +85,9 @@ export function WebSocketProvider({
           toast(`${data.participant.name} está participando do sorteio`);
           break;
         case "draw_result_admin": {
-          if (roomId) saveAdminMapping(roomId, data.mapping);
-          toast("Sorteio realizado. Mapeamento salvo no localStorage.");
+          setRoom((oldValue) =>
+            oldValue ? { ...oldValue, secretList: data.mapping } : null
+          );
           break;
         }
         case "your_match":
@@ -98,8 +98,7 @@ export function WebSocketProvider({
           toast("Você recebeu um par.");
           break;
         case "room_found":
-          const { id, participants, name, adminId, secretList }: RoomServer =
-            data.room;
+          const { id, participants, name, adminId }: RoomServer = data.room;
 
           if (adminId === currentUser.id) {
             router.push(`/room/${id}`);
@@ -115,8 +114,7 @@ export function WebSocketProvider({
             participants,
             name,
             slug: id,
-            secretList,
-            alreadyDraw: !!secretList,
+            alreadyDraw: false,
           });
           break;
         case "error":
@@ -137,7 +135,7 @@ export function WebSocketProvider({
           break;
       }
     },
-    [roomId, currentUser, router]
+    [currentUser, router]
   );
 
   const sendMessage = useCallback((data: any) => {
