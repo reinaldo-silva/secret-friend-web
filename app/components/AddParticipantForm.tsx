@@ -8,13 +8,20 @@ import { generateId } from "@/app/utils";
 import { Plus } from "lucide-react";
 import { FormEvent } from "react";
 import { toast } from "sonner";
+import { Text } from "./ui/Text";
 
 export function AddParticipantForm() {
   const { room, sendMessage } = useWebSocket();
 
   function addManual(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     if (!room) return;
+
+    if (room.alreadyDraw) {
+      toast("Não é possível adicionar participantes após o sorteio.");
+      return;
+    }
 
     const pid = generateId("p_");
 
@@ -44,13 +51,22 @@ export function AddParticipantForm() {
   }
 
   return (
-    <Card className="animate-fade-in">
+    <Card className="animate-fade-in space-y-2">
       <form onSubmit={addManual} className="flex w-full gap-2">
-        <Input placeholder="Nome do novo participante" name="name" />
-        <Button type="submit">
+        <Input
+          placeholder="Nome do novo participante"
+          name="name"
+          disabled={room.alreadyDraw}
+        />
+        <Button type="submit" disabled={room.alreadyDraw}>
           <Plus />
         </Button>
       </form>
+      {room.alreadyDraw && (
+        <Text className="font-semibold text-zinc-400!" size="sm">
+          Não é possível adicionar participantes após o sorteio
+        </Text>
+      )}
     </Card>
   );
 }

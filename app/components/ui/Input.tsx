@@ -17,7 +17,7 @@ export function Input({ label, className, ...props }: Readonly<IInputProps>) {
         {...props}
         aria-label={label}
         className={clsx(
-          "input p-2 rounded-xl bg-zinc-100 border border-zinc-300 outline-transparent focus:outline-purple-400 transition duration-200",
+          "input p-2 rounded-xl bg-zinc-100 border border-zinc-300 outline-transparent focus:outline-purple-400 transition duration-200 disabled:cursor-not-allowed",
           className
         )}
       />

@@ -44,7 +44,7 @@ export function Button({
       }}
       onClick={handleClick}
       className={clsx(
-        "px-6 py-2 rounded-xl transition duration-200 cursor-pointer flex items-center justify-center",
+        "px-6 py-2 rounded-xl transition duration-200 cursor-pointer flex items-center justify-center disabled:cursor-not-allowed",
         variantClasses[variant || "primary"],
         className
       )}
