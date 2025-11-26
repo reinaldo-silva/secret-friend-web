@@ -1,10 +1,8 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useWebSocket } from "../contexts/WebsocketContext";
 import { Button } from "./ui/Button";
 
 export function ExitRoomButton() {
-  const router = useRouter();
   const { room, sendMessage, currentUser } = useWebSocket();
 
   const leaveRoom = () => {
@@ -17,8 +15,6 @@ export function ExitRoomButton() {
       roomId: room.slug,
       clientId: currentUser.id,
     });
-
-    router.push("/room");
   };
 
   if (currentUser?.id === room?.admin.id) {

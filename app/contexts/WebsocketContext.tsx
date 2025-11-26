@@ -111,6 +111,8 @@ export function WebSocketProvider({
           const { clientId, clientName } = data;
           if (clientId === currentUser.id) {
             setRoom(null);
+            router.push("/room");
+            toast("Você foi removido pelo admin");
           } else {
             setRoom((oldValue) =>
               oldValue
