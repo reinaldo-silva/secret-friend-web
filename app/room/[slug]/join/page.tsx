@@ -1,5 +1,6 @@
 import { ButtonResult } from "@/app/components/ButtonResult";
 import { ClientOnly } from "@/app/components/ClientOnly";
+import { ExitRoomButton } from "@/app/components/ExitRoomButton";
 import { ParticipantsCard } from "@/app/components/Participants";
 import { RoomInformation } from "@/app/components/RoomInformation";
 
@@ -17,6 +18,7 @@ export default async function JoinPage({
         <ParticipantsCard />
       </ClientOnly>
       <ButtonResult slug={slug} />
+      <ExitRoomButton />
     </main>
   );
 }

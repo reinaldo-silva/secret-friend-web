@@ -106,6 +106,25 @@ export function WebSocketProvider({
           const { fromName, toName } = data;
           setResult({ fromName, toName });
           break;
+
+        case "left":
+          const { clientId, clientName } = data;
+          if (clientId === currentUser.id) {
+            setRoom(null);
+          } else {
+            setRoom((oldValue) =>
+              oldValue
+                ? {
+                    ...oldValue,
+                    participants: oldValue.participants.filter(
+                      (e) => e.id !== clientId
+                    ),
+                  }
+                : null
+            );
+            toast(`${clientName} saiu do sorteio`);
+          }
+          break;
         case "room_found":
           const { id, participants, name, adminId }: RoomServer = data.room;
 

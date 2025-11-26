@@ -5,7 +5,7 @@ import { ComponentPropsWithoutRef } from "react";
 
 interface IButtonProps extends ComponentPropsWithoutRef<typeof motion.button> {
   children: React.ReactNode;
-  variant?: "primary" | "outline" | "ghost";
+  variant?: "primary" | "outline" | "ghost" | "danger";
 }
 
 export function Button({
@@ -30,7 +30,9 @@ export function Button({
     primary: "bg-gradient text-zinc-50 hover:opacity-90",
     outline: "border-[0.5px] border-zinc-300 text-zinc-800 hover:bg-zinc-100",
     ghost:
-      "bg-transparent text-zinc-800 hover:bg-purple-100 hover:text-purple-800",
+      "bg-purple-100 border border-purple-300 hover:bg-purple-100 text-purple-600 font-semibold",
+    danger:
+      "bg-red-200 border-red-500 border text-red-600 hover:bg-red-100 font-semibold",
   };
 
   return (
