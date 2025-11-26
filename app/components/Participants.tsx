@@ -48,11 +48,12 @@ export function ParticipantsCard() {
                   <Crown size={18} className="text-yellow-500" />
                 )}
                 {p.id === currentUser?.id && (
-                  <span className="text-blue-500">(You)</span>
+                  <span className="text-blue-500">(Você)</span>
                 )}
                 {room.secretList && (
                   <button
                     type="button"
+                    className="cursor-pointer"
                     onClick={() =>
                       copyParticipantResultLink(
                         `${window.location.href}/result?token=${secretToken}`

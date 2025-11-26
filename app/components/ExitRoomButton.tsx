@@ -17,7 +17,7 @@ export function ExitRoomButton() {
     });
   };
 
-  if (currentUser?.id === room?.admin.id) {
+  if (currentUser?.id === room?.admin.id || !room?.secretList) {
     return null;
   }
 
