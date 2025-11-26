@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useEffectEvent } from "react";
 import { SERVER_STATUS, useWebSocket } from "../contexts/WebsocketContext";
 

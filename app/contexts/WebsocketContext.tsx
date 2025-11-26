@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, {
   createContext,
   useCallback,
@@ -31,8 +31,9 @@ type WebSocketContextType = {
   room: Room | null;
   currentUser: User | null;
   handleCreateRoom: (roomName: string) => Room;
-  myMatch: User | null;
+  myMatchToken: string | null;
   clearRoom: () => void;
+  result: { fromName: string; toName: string } | null;
 };
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(
@@ -48,9 +49,14 @@ export function WebSocketProvider({
 }) {
   const router = useRouter();
   const [status, setStatus] = useState<SERVER_STATUS>(SERVER_STATUS.CHECKING);
-  const [myMatch, setMyMatch] = useState<User | null>(null);
+  const [myMatchToken, setMyMatchToken] = useState<string | null>(null);
+  const [result, setResult] = useState<{
+    toName: string;
+    fromName: string;
+  } | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
+  const pathname = usePathname();
 
   function clearRoom() {
     setRoom(null);
@@ -63,13 +69,10 @@ export function WebSocketProvider({
           const { roomId: roomIdCreated } = data;
 
           router.push(`/room/${roomIdCreated}`);
-          console.log("Sala criada com sucesso", data);
           break;
         case "joined":
           const { roomId: roomIdJoined } = data;
           router.push(`/room/${roomIdJoined}/join`);
-
-          console.log("Você entrou na sala", data);
           break;
         case "participant_added":
           setRoom((prev) => {
@@ -94,16 +97,22 @@ export function WebSocketProvider({
           setRoom((oldValue) =>
             oldValue ? { ...oldValue, alreadyDraw: true } : null
           );
-          setMyMatch(data.match);
+          setMyMatchToken(data.token);
           toast("Você recebeu um par.");
+          break;
+        case "result":
+          const { fromName, toName } = data;
+          setResult({ fromName, toName });
           break;
         case "room_found":
           const { id, participants, name, adminId }: RoomServer = data.room;
 
-          if (adminId === currentUser.id) {
-            router.push(`/room/${id}`);
-          } else {
-            router.push(`/room/${id}/join`);
+          if (!pathname.includes("/result")) {
+            if (adminId === currentUser.id) {
+              router.push(`/room/${id}`);
+            } else {
+              router.push(`/room/${id}/join`);
+            }
           }
 
           const adminUser =
@@ -135,11 +144,12 @@ export function WebSocketProvider({
           break;
       }
     },
-    [currentUser, router]
+    [currentUser, router, pathname]
   );
 
   const sendMessage = useCallback((data: any) => {
     const socket = socketRef.current;
+
     if (socket && socket.connected) {
       socket.emit("message", data);
     } else {
@@ -173,8 +183,6 @@ export function WebSocketProvider({
   });
 
   useEffect(() => {
-    console.log(!!socketRef.current);
-
     handlerStartSocket();
   }, []);
 
@@ -206,9 +214,18 @@ export function WebSocketProvider({
       room,
       handleCreateRoom,
       clearRoom,
-      myMatch,
+      myMatchToken,
+      result,
     }),
-    [status, sendMessage, currentUser, room, handleCreateRoom, myMatch]
+    [
+      status,
+      sendMessage,
+      currentUser,
+      room,
+      handleCreateRoom,
+      myMatchToken,
+      result,
+    ]
   );
 
   return (

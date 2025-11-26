@@ -2,11 +2,12 @@
 import { Clipboard } from "lucide-react";
 import { toast } from "sonner";
 import { useWebSocket } from "../contexts/WebsocketContext";
-import { Heading } from "./ui/Heading";
 import { Loader } from "./Loader";
+import { Heading } from "./ui/Heading";
 
 export function RoomInformation() {
   const { room } = useWebSocket();
+
   async function copyRoomLink() {
     if (typeof window === "undefined") {
       return;

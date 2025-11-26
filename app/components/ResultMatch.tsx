@@ -1,16 +1,34 @@
 "use client";
 
 import { Gift } from "lucide-react";
-import { useWebSocket } from "../contexts/WebsocketContext";
+import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useEffectEvent } from "react";
+import { SERVER_STATUS, useWebSocket } from "../contexts/WebsocketContext";
 import { Loader } from "./Loader";
 import ScratchReveal from "./ScratchReveal";
-import { Text } from "./ui/Text";
 import { InfoCard } from "./ui/InfoCard";
+import { Text } from "./ui/Text";
 
 export function ResultMatch() {
-  const { myMatch, currentUser } = useWebSocket();
+  const { result, sendMessage, status } = useWebSocket();
+  const tokenParam = useSearchParams().get("token");
+  const { slug } = useParams();
 
-  if (!myMatch) {
+  const getResult = useEffectEvent(() => {
+    sendMessage({
+      type: "get_result_by_token",
+      roomId: slug,
+      token: tokenParam,
+    });
+  });
+
+  useEffect(() => {
+    if (status === SERVER_STATUS.ALIVE) {
+      getResult();
+    }
+  }, [status]);
+
+  if (!result) {
     return <Loader />;
   }
 
@@ -20,11 +38,11 @@ export function ResultMatch() {
         <Gift className="size-6" />
       </div>
       <Text size="lg">
-        <span className="font-semibold">{currentUser?.name}</span>, seu amigo
+        <span className="font-semibold">{result.fromName}</span>, seu amigo
         secreto é...{" "}
       </Text>
 
-      <ScratchReveal name={myMatch.name} />
+      <ScratchReveal name={result.toName} />
 
       <InfoCard
         description="Salve ou registre o nome do seu amigo secreto, já que as informações podem não ficar acessíveis posteriormente."

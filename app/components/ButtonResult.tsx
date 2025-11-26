@@ -5,11 +5,15 @@ import { Button } from "./ui/Button";
 import { useWebSocket } from "../contexts/WebsocketContext";
 
 export function ButtonResult({ slug }: { slug: string }) {
-  const { room } = useWebSocket();
+  const { room, myMatchToken } = useWebSocket();
 
   return (
     <Link
-      href={room?.alreadyDraw ? `/room/${slug}/result` : `/room/${slug}/join`}
+      href={
+        room?.alreadyDraw
+          ? `/room/${slug}/result?token=${myMatchToken}`
+          : `/room/${slug}/join`
+      }
       className="flex w-full"
     >
       <Button

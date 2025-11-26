@@ -9,7 +9,7 @@ interface Room {
   participants: User[];
   admin: User;
   alreadyDraw: boolean;
-  secretList?: Record<string, User>;
+  secretList?: Record<string, string>;
 }
 
 interface RoomServer {
@@ -17,7 +17,7 @@ interface RoomServer {
   name?: string;
   adminId: string;
   participants: User[];
-  secretList?: Record<string, User>;
+  secretList?: Record<string, string>;
 }
 
 export type { User, Room, RoomServer };
