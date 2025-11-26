@@ -3,13 +3,11 @@ import { Card } from "@/app/components/ui/Card";
 import { Heading } from "@/app/components/ui/Heading";
 import { useWebSocket } from "@/app/contexts/WebsocketContext";
 import { Crown, Link as LinkIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { Loader } from "./Loader";
 
 export function ParticipantsCard() {
   const { room, currentUser } = useWebSocket();
-  const pathname = usePathname();
 
   async function copyParticipantResultLink(link: string) {
     if (typeof window === "undefined") {
@@ -45,7 +43,7 @@ export function ParticipantsCard() {
                     type="button"
                     onClick={() =>
                       copyParticipantResultLink(
-                        `${pathname}/result?token=${secretToken}`
+                        `${window.location.href}/result?token=${secretToken}`
                       )
                     }
                   >

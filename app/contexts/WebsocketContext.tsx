@@ -17,7 +17,9 @@ import { Room, RoomServer, User } from "../interfaces/user";
 import { generateId } from "../utils";
 import { need_at_least_two_participants } from "../utils/errors/need_at_least_two_participants";
 import { not_authorized } from "../utils/errors/not_authorized";
+import { room_already_draw } from "../utils/errors/room_already_draw";
 import { room_not_found } from "../utils/errors/room_not_found";
+import { user_not_participant } from "../utils/errors/user_not_participant";
 
 export enum SERVER_STATUS {
   ALIVE = "ALIVE",
@@ -132,6 +134,9 @@ export function WebSocketProvider({
               need_at_least_two_participants(),
             not_authorized: () => not_authorized((path) => router.push(path)),
             room_not_found: () => room_not_found(),
+            room_already_draw: () => room_already_draw(),
+            user_not_participant: () =>
+              user_not_participant((path) => router.push(path)),
           };
 
           const error = mapErrors[data.message];

@@ -35,17 +35,6 @@ export function CreateRoom() {
     sendMessage(payload);
   }
 
-  // function startDraw() {
-  //   if (!room) return;
-
-  //   const payload = {
-  //     type: "start_draw",
-  //     roomId: room.slug,
-  //     adminId: room.admin.id,
-  //   };
-  //   sendMessage(payload);
-  // }
-
   return (
     <form onSubmit={create} className="flex flex-col text-center gap-2">
       <div className="mb-4">
