@@ -2,12 +2,13 @@
 import { Card } from "@/app/components/ui/Card";
 import { Heading } from "@/app/components/ui/Heading";
 import { useWebSocket } from "@/app/contexts/WebsocketContext";
+import { clsx } from "clsx";
 import { Crown, Link as LinkIcon, X } from "lucide-react";
 import { toast } from "sonner";
 import { Loader } from "./Loader";
 
 export function ParticipantsCard() {
-  const { room, currentUser, sendMessage } = useWebSocket();
+  const { room, currentUser, sendMessage, onlineUsers } = useWebSocket();
 
   async function copyParticipantResultLink(link: string) {
     if (typeof window === "undefined") {
@@ -40,9 +41,17 @@ export function ParticipantsCard() {
       <div className="flex flex-wrap gap-2 mt-4">
         {room.participants.map((p, key) => {
           const secretToken = room.secretList?.[p.id] ?? "";
+          const online = onlineUsers.some((user) => user.id === p.id);
+
           return (
             <div key={key} className="badge-gradient animate-fade-in">
               <div className="flex items-center gap-2">
+                <span
+                  className={clsx("size-2 rounded-full", {
+                    "bg-red-500": !online,
+                    "bg-green-400": online,
+                  })}
+                />
                 <span className="truncate max-w-[120px]">{p.name}</span>
                 {p.id === room.admin.id && (
                   <Crown size={18} className="text-yellow-500" />

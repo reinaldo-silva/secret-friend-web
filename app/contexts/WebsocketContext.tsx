@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import React, {
   createContext,
   useCallback,
@@ -36,6 +36,7 @@ type WebSocketContextType = {
   myMatchToken: string | null;
   clearRoom: () => void;
   result: { fromName: string; toName: string } | null;
+  onlineUsers: User[];
 };
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(
@@ -58,7 +59,9 @@ export function WebSocketProvider({
   } | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
+  const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
   const pathname = usePathname();
+  const params = useParams();
 
   function clearRoom() {
     setRoom(null);
@@ -71,6 +74,9 @@ export function WebSocketProvider({
           const { roomId: roomIdCreated } = data;
 
           router.push(`/room/${roomIdCreated}`);
+          break;
+        case "users_status":
+          setOnlineUsers(data.users);
           break;
         case "joined":
           const { roomId: roomIdJoined } = data;
@@ -189,7 +195,19 @@ export function WebSocketProvider({
 
     socketRef.current.on("connect", () => {
       console.log("✅ WebSocket conectado");
-      sendMessage({ type: "connect_server", user: currentUser });
+
+      sendMessage(
+        params.slug
+          ? {
+              type: "connect_server",
+              user: currentUser,
+              roomId: params.slug,
+            }
+          : {
+              type: "connect_server",
+              user: currentUser,
+            }
+      );
       setStatus(SERVER_STATUS.ALIVE);
     });
 
@@ -242,6 +260,7 @@ export function WebSocketProvider({
       clearRoom,
       myMatchToken,
       result,
+      onlineUsers,
     }),
     [
       status,
@@ -251,6 +270,7 @@ export function WebSocketProvider({
       handleCreateRoom,
       myMatchToken,
       result,
+      onlineUsers,
     ]
   );
 
