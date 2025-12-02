@@ -9,11 +9,13 @@ export function RoomInformation() {
   const { room } = useWebSocket();
 
   async function copyRoomLink() {
-    if (typeof window === "undefined") {
+    if (typeof window === "undefined" || !room) {
       return;
     }
 
-    await navigator.clipboard.writeText(window.location.href);
+    const link = `${window.location.origin}/room/${room.slug}`;
+
+    await navigator.clipboard.writeText(link);
     toast("Link copiado para a área de transferência.");
   }
 
