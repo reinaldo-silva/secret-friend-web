@@ -1,5 +1,6 @@
 "use client";
 import { useWebSocket } from "../contexts/WebsocketContext";
+import { Dialog } from "./Dialog";
 import { Button } from "./ui/Button";
 
 export function ExitRoomButton() {
@@ -17,18 +18,19 @@ export function ExitRoomButton() {
     });
   };
 
-  if (currentUser?.id === room?.admin.id || !room?.secretList) {
+  if (!room || currentUser?.id === room.admin.id || room.alreadyDraw) {
     return null;
   }
 
   return (
-    <Button
-      className="flex-1 animate-fade-in"
-      type="button"
-      onClick={leaveRoom}
-      variant={"danger"}
+    <Dialog
+      title={`Deseja sair desse soteio?`}
+      description="Você poderá entrar novamente se tiver o link da sala, porém nao estará mais participando do sorteio."
+      handleConfirm={leaveRoom}
     >
-      Sair do sorteio
-    </Button>
+      <Button className="flex-1 animate-fade-in" type="button" variant="danger">
+        Sair do sorteio
+      </Button>
+    </Dialog>
   );
 }

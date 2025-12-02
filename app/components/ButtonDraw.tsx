@@ -1,6 +1,7 @@
 "use client";
 import { useWebSocket } from "../contexts/WebsocketContext";
 import { ButtonResult } from "./ButtonResult";
+import { Dialog } from "./Dialog";
 import { Loader } from "./Loader";
 import { Button } from "./ui/Button";
 
@@ -25,14 +26,18 @@ export function ButtonDraw({ slug }: { slug: string }) {
   }
 
   return (
-    <>
+    <Dialog
+      title={`Realizar o sorteio agora?`}
+      description="Verifique que todos os participantes estejam no sorteio. Após iniciar, não será possível adicionar ou remover participantes."
+      handleConfirm={startDraw}
+    >
       {room.alreadyDraw ? (
         <ButtonResult slug={slug} />
       ) : (
-        <Button onClick={startDraw} type="button" className="animate-fade-in">
+        <Button type="button" className="animate-fade-in">
           Iniciar sorteio
         </Button>
       )}
-    </>
+    </Dialog>
   );
 }

@@ -5,6 +5,7 @@ import { useWebSocket } from "@/app/contexts/WebsocketContext";
 import { clsx } from "clsx";
 import { Crown, Link as LinkIcon, X } from "lucide-react";
 import { toast } from "sonner";
+import { Dialog } from "./Dialog";
 import { Loader } from "./Loader";
 
 export function ParticipantsCard() {
@@ -75,13 +76,18 @@ export function ParticipantsCard() {
                 {!room.secretList &&
                   room.admin.id === currentUser?.id &&
                   p.id !== currentUser?.id && (
-                    <button
-                      className="cursor-pointer text-red-500"
-                      type="button"
-                      onClick={() => removeUser(p.id)}
+                    <Dialog
+                      title={`Remover ${p.name} do sortieo?`}
+                      description="Essa ação não pode ser desfeita. Tem certeza que deseja remover este participante da sala?"
+                      handleConfirm={() => removeUser(p.id)}
                     >
-                      <X size={16} />
-                    </button>
+                      <button
+                        className="cursor-pointer text-red-500"
+                        type="button"
+                      >
+                        <X size={16} />
+                      </button>
+                    </Dialog>
                   )}
               </div>
             </div>
