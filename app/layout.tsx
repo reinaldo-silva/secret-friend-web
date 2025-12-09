@@ -3,8 +3,7 @@ import { Gift } from "lucide-react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
-import { ClientOnly } from "./components/ClientOnly";
-import { ExitButton } from "./components/ExitButton";
+import { Aside } from "./components/Aside";
 import { Heading } from "./components/ui/Heading";
 import { Text } from "./components/ui/Text";
 import "./globals.css";
@@ -38,16 +37,8 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 min-h-screen`}
       >
         <Toaster />
-        <div className="min-h-screen flex flex-col items-center justify-center p-6">
-          {userLocal && (
-            <ClientOnly
-              fallback={
-                <div className="fixed top-4 left-4 bg-zinc-200 w-14 h-[26px] animate-pulse rounded-sm" />
-              }
-            >
-              <ExitButton />
-            </ClientOnly>
-          )}
+        <Aside userLocal={userLocal} />
+        <div className="min-h-[calc(100vh-2rem)] flex flex-col items-center justify-center p-6">
           <header className="mb-12 text-center animate-fade-in">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="size-12 rounded-xl flex items-center justify-center bg-gradient text-zinc-50">

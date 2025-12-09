@@ -1,11 +1,11 @@
 "use client";
 import Cookies from "js-cookie";
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ClientOnly } from "../components/ClientOnly";
 import { CreateRoom } from "../components/CreateRoom";
 import JoinRoom from "../components/JoinRoom";
 import { Button } from "../components/ui/Button";
-import { ButtonArrowLeft } from "../components/ui/ButtonArrowLeft";
 import { Card } from "../components/ui/Card";
 import { Heading } from "../components/ui/Heading";
 import { Text } from "../components/ui/Text";
@@ -29,13 +29,15 @@ export default function RoomPage() {
 
   return (
     <ClientOnly>
-      <Card className="flex flex-col w-full gap-2 max-w-xl animate-fade-in">
+      <Card className="flex flex-col w-full gap-2 max-w-xl animate-fade-in relative">
         {step !== "home" && (
-          <ButtonArrowLeft
-            description="Voltar"
+          <button
+            className="flex items-center p-4 absolute top-3 left-3 cursor-pointer hover:opacity-60 mr-auto"
             onClick={() => setStep("home")}
-            className="mr-auto"
-          />
+          >
+            <ArrowLeft size={16} />
+            <Text size="sm" className="font-semibold"></Text>
+          </button>
         )}
         {step === "home" && (
           <>
